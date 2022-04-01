@@ -1,0 +1,49 @@
+//题目：https://www.acwing.com/problem/content/description/225/
+#include<bits/stdc++.h>
+using namespace std;
+#define LL long long
+LL a[15],r[15];
+/*
+int exEcd(LL Mi, LL divr, LL &M_rvt, LL &Kdivr) {//M_rvt为Mi的逆元
+    if (divr == 0) {
+        M_rvt = 1;
+        Kdivr = 0;
+        return Mi;
+    }
+    int gcd = 1;
+    
+    gcd = exEcd(divr, Mi%divr, Kdivr, M_rvt);
+    
+    Kdivr -= Mi / divr * M_rvt;
+    return gcd;//gcd为最大公约数  Mi,divr的
+}*/
+typedef  long long ll;
+void extgcd(ll a,ll b,ll& d,ll& x,ll& y){//欧几里得法求逆元
+    if(!b){ d=a; x=1; y=0;}
+    else{ extgcd(b,a%b,d,y,x); y-=x*(a/b); }
+}
+ll inverse(ll a,ll n){
+    ll d,x,y;
+    extgcd(a,n,d,x,y);
+    return d==1?(x+n)%n:-1;
+}
+LL CRT(int k, LL* a, LL* r) {//中国剩余定理
+  LL n = 1, ans = 0;
+  for (int i = 1; i <= k; i++) n = n * r[i];
+  LL M_rvt, Kdivr;
+  for (int i = 1; i <= k; i++) {
+    LL m = n / r[i];
+    LL b=inverse(m,r[i]);  // b * m mod r[i] = 1
+    //exEcd(m,r[i], M_rvt, Kdivr);//求逆元；
+    ans = (ans + a[i] * m * b % n) % n;
+  }
+  return (ans % n + n) % n;
+}
+int main(){
+    int n;
+    cin>>n;
+    for(int i=1;i<=n;i++){
+        cin>>r[i]>>a[i];
+    }
+    cout<<CRT(n,a,r)<<endl;
+}
